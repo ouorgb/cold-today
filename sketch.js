@@ -70,7 +70,7 @@ function drawMarquee() {
   fill(250, 250, 90);
   noStroke();
   rect(0, 0, width, 30); 
-  fill(110, 120, 190);
+  fill(120, 140, 210);
   textFont(font);
   textSize(16); 
   textAlign(LEFT, CENTER);
