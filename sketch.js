@@ -1,9 +1,3 @@
-/* * ===========================================================
- * Project: cold-today!
- * Copyright (c) 2026 @ouorgb. All rights reserved.
- * ===========================================================
- */
-
 let font;
 let particles = [];
 let msg = "추워!"; 
@@ -12,13 +6,13 @@ let resolution = 3;
 
 let marqueeX = 0;
 let marqueeSpeed = 1.2; 
-let marqueeText = "날씨 데이터를 확인하는 중...          ";
+let marqueeText = "데이터를 불러오는 중...          ";
 
 function preload() {
   try {
     font = loadFont('GothicA1-Black.ttf'); 
   } catch (e) {
-    console.log("폰트 로딩에 실패했습니다. 기본 폰트를 사용합니다.");
+    console.log("Font load failed");
   }
 }
 
@@ -30,7 +24,7 @@ function fetchSeoulWeather() {
       marqueeText = `현재 서울 기온: ${temp}°C | 마우스로 글자를 흩뿌려보세요!          `;
     }
   }, () => {
-    marqueeText = "기온 정보를 가져오지 못했습니다. | 마우스로 글자를 흩뿌려보세요!          ";
+    marqueeText = "기온 로드 실패 | 마우스로 글자를 흩뿌려보세요!          ";
   });
 }
 
@@ -62,23 +56,21 @@ function setup() {
 function draw() {
   background(255); 
   
+  drawMarquee();
+
   for (let p of particles) {
     p.behaviors();
     p.update();
     p.show();
   }
-
-  drawMarquee();
 }
 
 function drawMarquee() {
   push();
-  // 배경색 (밝은 노랑)
   fill(255, 240, 100);
   noStroke();
   rect(0, 0, width, 35); 
   
-  // 글자색 (진한 회색 - 가독성 높임)
   fill(50); 
   
   if (font) {
@@ -91,8 +83,8 @@ function drawMarquee() {
   textAlign(LEFT, CENTER);
   
   let tw = textWidth(marqueeText);
+  if (tw === 0) tw = width; 
   
-  // 텍스트 출력
   text(marqueeText, marqueeX, 17.5);
   text(marqueeText, marqueeX + tw, 17.5);
   
