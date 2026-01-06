@@ -6,13 +6,13 @@ let resolution = 3;
 
 let marqueeX = 0;
 let marqueeSpeed = 1.2; 
-let marqueeText = "데이터를 불러오는 중...          ";
+let marqueeText = "데이터를 불러오는 중입니다...          ";
 
 function preload() {
   try {
     font = loadFont('GothicA1-Black.ttf'); 
   } catch (e) {
-    console.log("Font load failed");
+    console.log("Font failed");
   }
 }
 
@@ -23,7 +23,7 @@ function fetchSeoulWeather() {
       let temp = data.current_weather.temperature;
       marqueeText = `현재 서울 기온: ${temp}°C | 마우스로 글자를 흩뿌려보세요!          `;
     }
-  }, () => {
+  }, (err) => {
     marqueeText = "기온 로드 실패 | 마우스로 글자를 흩뿌려보세요!          ";
   });
 }
@@ -56,40 +56,39 @@ function setup() {
 function draw() {
   background(255); 
   
-  drawMarquee();
-
   for (let p of particles) {
     p.behaviors();
     p.update();
     p.show();
   }
+
+  drawMarquee();
 }
 
 function drawMarquee() {
   push();
-  fill(255, 240, 100);
+  fill(255, 240, 0);
   noStroke();
   rect(0, 0, width, 35); 
   
-  fill(50); 
-  
-  if (font) {
-    textFont(font);
-  } else {
-    textFont('sans-serif');
-  }
+  fill(0); 
+  if (font) textFont(font);
+  else textFont('sans-serif');
   
   textSize(16); 
   textAlign(LEFT, CENTER);
   
   let tw = textWidth(marqueeText);
-  if (tw === 0) tw = width; 
+  let gap = 100; 
   
   text(marqueeText, marqueeX, 17.5);
-  text(marqueeText, marqueeX + tw, 17.5);
+  text(marqueeText, marqueeX + tw + gap, 17.5);
   
   marqueeX -= marqueeSpeed;
-  if (marqueeX <= -tw) marqueeX = 0;
+  
+  if (marqueeX <= -(tw + gap)) {
+    marqueeX = 0;
+  }
   pop();
 }
 
