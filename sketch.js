@@ -3,6 +3,7 @@
  * Copyright (c) 2026 @ouorgb. All rights reserved.
  * ===========================================================
  */
+
 let font;
 let particles = [];
 let msg = "추워!"; 
@@ -11,19 +12,25 @@ let resolution = 3;
 
 let marqueeX = 0;
 let marqueeSpeed = 1.2; 
-let marqueeText = "데이터를 불러오는 중...          ";
+let marqueeText = "날씨 데이터를 확인하는 중...          ";
 
 function preload() {
-  font = loadFont('GothicA1-Black.ttf'); 
+  try {
+    font = loadFont('GothicA1-Black.ttf'); 
+  } catch (e) {
+    console.log("폰트 로딩에 실패했습니다. 기본 폰트를 사용합니다.");
+  }
 }
 
 function fetchSeoulWeather() {
   let url = 'https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current_weather=true';
   loadJSON(url, (data) => {
-    let temp = data.current_weather.temperature;
-    marqueeText = `현재 서울 기온: ${temp}°C | 마우스로 글자를 흩뿌려보세요!          `;
+    if (data && data.current_weather) {
+      let temp = data.current_weather.temperature;
+      marqueeText = `현재 서울 기온: ${temp}°C | 마우스로 글자를 흩뿌려보세요!          `;
+    }
   }, () => {
-    marqueeText = "기온 로드 실패 | 마우스로 글자를 흩뿌려보세요!          ";
+    marqueeText = "기온 정보를 가져오지 못했습니다. | 마우스로 글자를 흩뿌려보세요!          ";
   });
 }
 
@@ -35,7 +42,7 @@ function setup() {
   let pg = createGraphics(width, height);
   pg.pixelDensity(1);
   pg.background(0);
-  pg.textFont(font);
+  if (font) pg.textFont(font);
   pg.textSize(fontSize);
   pg.textAlign(CENTER, CENTER);
   pg.fill(255);
@@ -66,11 +73,13 @@ function draw() {
 
 function drawMarquee() {
   push();
-  fill(250, 250, 90);
+  // 배경색 (밝은 노랑)
+  fill(255, 240, 100);
   noStroke();
-  rect(0, 0, width, 30); 
+  rect(0, 0, width, 35); 
   
-  fill(120, 140, 210); 
+  // 글자색 (진한 회색 - 가독성 높임)
+  fill(50); 
   
   if (font) {
     textFont(font);
@@ -83,8 +92,9 @@ function drawMarquee() {
   
   let tw = textWidth(marqueeText);
   
-  text(marqueeText, marqueeX, 15);
-  text(marqueeText, marqueeX + tw, 15);
+  // 텍스트 출력
+  text(marqueeText, marqueeX, 17.5);
+  text(marqueeText, marqueeX + tw, 17.5);
   
   marqueeX -= marqueeSpeed;
   if (marqueeX <= -tw) marqueeX = 0;
@@ -126,7 +136,7 @@ class Particle {
   }
 
   show() {
-    stroke(0, 200, 180, 230); 
+    stroke(0, 180, 200, 230); 
     strokeWeight(2); 
     point(this.pos.x, this.pos.y);
   }
