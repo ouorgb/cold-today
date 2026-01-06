@@ -3,7 +3,6 @@
  * Copyright (c) 2026 @ouorgb. All rights reserved.
  * ===========================================================
  */
-
 let font;
 let particles = [];
 let msg = "추워!"; 
@@ -70,13 +69,23 @@ function drawMarquee() {
   fill(250, 250, 90);
   noStroke();
   rect(0, 0, width, 30); 
-  fill(120, 140, 210);
-  textFont(font);
+  
+  fill(120, 140, 210); 
+  
+  if (font) {
+    textFont(font);
+  } else {
+    textFont('sans-serif');
+  }
+  
   textSize(16); 
   textAlign(LEFT, CENTER);
+  
   let tw = textWidth(marqueeText);
+  
   text(marqueeText, marqueeX, 15);
   text(marqueeText, marqueeX + tw, 15);
+  
   marqueeX -= marqueeSpeed;
   if (marqueeX <= -tw) marqueeX = 0;
   pop();
