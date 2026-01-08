@@ -3,6 +3,7 @@
  * Copyright (c) 2026 @ouorgb. All rights reserved.
  * ===========================================================
  */
+
 let font;
 let particles = [];
 let msg = "추워!"; 
@@ -178,4 +179,3 @@ class Particle {
     }
   }
 }
-
