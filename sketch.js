@@ -10,7 +10,7 @@ let msg = "추워!";
 let fontSize = 180;
 let resolution = 3; 
 
-let marqueeX = 0;
+let marqueeX; 
 let marqueeSpeed = 1.2; 
 let marqueeText = "데이터를 불러오는 중...          ";
 
@@ -32,6 +32,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   pixelDensity(1);
   fetchSeoulWeather();
+  
+  marqueeX = width; 
 
   let pg = createGraphics(width, height);
   pg.pixelDensity(1);
@@ -70,15 +72,27 @@ function drawMarquee() {
   fill(250, 250, 90);
   noStroke();
   rect(0, 0, width, 30); 
+  
   fill(120, 140, 210);
-  textFont(font);
+  
+  if (font) {
+    textFont(font);
+  } else {
+    textFont('sans-serif');
+  }
+  
   textSize(16); 
   textAlign(LEFT, CENTER);
+  
   let tw = textWidth(marqueeText);
+  
   text(marqueeText, marqueeX, 15);
-  text(marqueeText, marqueeX + tw, 15);
+  
   marqueeX -= marqueeSpeed;
-  if (marqueeX <= -tw) marqueeX = 0;
+  
+  if (marqueeX < -tw) {
+    marqueeX = width;
+  }
   pop();
 }
 
@@ -149,3 +163,4 @@ class Particle {
     }
   }
 }
+
