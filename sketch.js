@@ -3,15 +3,14 @@
  * Copyright (c) 2026 @ouorgb. All rights reserved.
  * ===========================================================
  */
-
 let font;
 let particles = [];
 let msg = "추워!"; 
 let fontSize;
-let resolution = 4; 
+let resolution = 3; 
 
 let marqueeX = 0; 
-let marqueeSpeed = 2.0; 
+let marqueeSpeed = 1.2; 
 let marqueeText = "데이터를 불러오는 중입니다...          ";
 
 function preload() {
@@ -48,8 +47,8 @@ function windowResized() {
 
 function initParticles() {
   particles = [];
-  fontSize = min(width / 5, 250); 
-  
+  fontSize = min(width / 3, 300); 
+
   let pg = createGraphics(width, height);
   pg.pixelDensity(1);
   pg.background(0);
@@ -86,24 +85,28 @@ function drawMarquee() {
   push();
   fill(250, 250, 90);
   noStroke();
-  rect(0, 0, width, 40); 
+  rect(0, 0, width, 30); 
   
-  fill(60);
+  fill(120, 140, 210);
   if (font) textFont(font);
   else textFont('sans-serif');
-  textSize(20); 
+  textSize(16); 
   textAlign(LEFT, CENTER);
   
   let tw = textWidth(marqueeText);
-  let gap = 150; 
+  let gap = 100; 
   
   if (tw > 0) {
     let step = tw + gap;
     for (let xPos = marqueeX; xPos < width + step; xPos += step) {
-      text(marqueeText, xPos, 20);
+      text(marqueeText, xPos, 15);
     }
+    
     marqueeX -= marqueeSpeed;
-    if (marqueeX <= -step) marqueeX = 0;
+    
+    if (marqueeX <= -step) {
+      marqueeX = 0; 
+    }
   }
   pop();
 }
@@ -114,18 +117,19 @@ class Particle {
     this.target = createVector(x, y);
     this.vel = p5.Vector.random2D();
     this.acc = createVector();
-    this.maxspeed = 15; 
-    this.maxforce = 1.2; 
+    this.maxspeed = 18; 
+    this.maxforce = 1.5; 
   }
 
   behaviors() {
     let arrive = this.arrive(this.target);
     let mouse = createVector(mouseX, mouseY);
     let flee = this.flee(mouse);
-    
+    let jitter = p5.Vector.random2D();
+    jitter.mult(0.3);
+    this.applyForce(jitter);
     arrive.mult(1);
-    flee.mult(3); 
-
+    flee.mult(6); 
     this.applyForce(arrive);
     this.applyForce(flee);
   }
@@ -138,12 +142,12 @@ class Particle {
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.acc.mult(0);
-    this.vel.mult(0.88); 
+    this.vel.mult(0.95); 
   }
 
   show() {
-    stroke(0, 150, 200, 230); 
-    strokeWeight(2.5); 
+    stroke(0, 200, 180, 230); 
+    strokeWeight(2); 
     point(this.pos.x, this.pos.y);
   }
 
@@ -163,14 +167,15 @@ class Particle {
   flee(target) {
     let desired = p5.Vector.sub(target, this.pos);
     let d = desired.mag();
-    if (d < 70) { 
+    if (d < 80) { 
       desired.setMag(this.maxspeed);
       desired.mult(-1);
       let steer = p5.Vector.sub(desired, this.vel);
-      steer.limit(this.maxforce * 3);
+      steer.limit(this.maxforce * 2);
       return steer;
     } else {
       return createVector(0, 0);
     }
   }
 }
+
