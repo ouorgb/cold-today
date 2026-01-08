@@ -48,7 +48,7 @@ function windowResized() {
 
 function initParticles() {
   particles = [];
-  fontSize = min(width / 5, 180); 
+  fontSize = min(width / 3, 250); 
 
   let pg = createGraphics(width, height);
   pg.pixelDensity(1);
