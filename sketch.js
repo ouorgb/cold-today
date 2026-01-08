@@ -8,10 +8,10 @@ let font;
 let particles = [];
 let msg = "추워!"; 
 let fontSize;
-let resolution = 3; 
+let resolution = 4; 
 
 let marqueeX = 0; 
-let marqueeSpeed = 1.2; 
+let marqueeSpeed = 1.5; 
 let marqueeText = "데이터를 불러오는 중입니다...          ";
 
 function preload() {
@@ -86,21 +86,21 @@ function drawMarquee() {
   push();
   fill(250, 250, 90);
   noStroke();
-  rect(0, 0, width, 30); 
+  rect(0, 0, width, 40); 
   
   fill(120, 140, 210);
   if (font) textFont(font);
   else textFont('sans-serif');
-  textSize(16); 
+  textSize(18); 
   textAlign(LEFT, CENTER);
   
   let tw = textWidth(marqueeText);
   let gap = 100; 
   
-  if (tw > 0) {
+  if (tw > 50) {
     let step = tw + gap;
     for (let xPos = marqueeX; xPos < width + step; xPos += step) {
-      text(marqueeText, xPos, 15);
+      text(marqueeText, xPos, 20);
     }
     
     marqueeX -= marqueeSpeed;
@@ -108,6 +108,10 @@ function drawMarquee() {
     if (marqueeX <= -step) {
       marqueeX = 0; 
     }
+  } else {
+    text(marqueeText, marqueeX, 20);
+    marqueeX -= marqueeSpeed;
+    if (marqueeX < -width) marqueeX = width;
   }
   pop();
 }
@@ -148,7 +152,7 @@ class Particle {
 
   show() {
     stroke(0, 200, 180, 230); 
-    strokeWeight(2); 
+    strokeWeight(2.5); 
     point(this.pos.x, this.pos.y);
   }
 
@@ -179,3 +183,5 @@ class Particle {
     }
   }
 }
+
+
