@@ -8,10 +8,10 @@ let font;
 let particles = [];
 let msg = "추워!"; 
 let fontSize;
-let resolution = 4; 
+let resolution = 3; 
 
 let marqueeX = 0; 
-let marqueeSpeed = 1.5; 
+let marqueeSpeed = 1.2; 
 let marqueeText = "데이터를 불러오는 중입니다...          ";
 
 function preload() {
@@ -86,21 +86,21 @@ function drawMarquee() {
   push();
   fill(250, 250, 90);
   noStroke();
-  rect(0, 0, width, 40); 
+  rect(0, 0, width, 30); 
   
   fill(120, 140, 210);
   if (font) textFont(font);
   else textFont('sans-serif');
-  textSize(18); 
+  textSize(16); 
   textAlign(LEFT, CENTER);
   
   let tw = textWidth(marqueeText);
   let gap = 100; 
   
-  if (tw > 50) {
+  if (tw > 0) {
     let step = tw + gap;
     for (let xPos = marqueeX; xPos < width + step; xPos += step) {
-      text(marqueeText, xPos, 20);
+      text(marqueeText, xPos, 15);
     }
     
     marqueeX -= marqueeSpeed;
@@ -108,10 +108,6 @@ function drawMarquee() {
     if (marqueeX <= -step) {
       marqueeX = 0; 
     }
-  } else {
-    text(marqueeText, marqueeX, 20);
-    marqueeX -= marqueeSpeed;
-    if (marqueeX < -width) marqueeX = width;
   }
   pop();
 }
@@ -122,8 +118,8 @@ class Particle {
     this.target = createVector(x, y);
     this.vel = p5.Vector.random2D();
     this.acc = createVector();
-    this.maxspeed = 18; 
-    this.maxforce = 1.5; 
+    this.maxspeed = 10;
+    this.maxforce = 0.6;
   }
 
   behaviors() {
@@ -134,7 +130,7 @@ class Particle {
     jitter.mult(0.3);
     this.applyForce(jitter);
     arrive.mult(1);
-    flee.mult(6); 
+    flee.mult(2); 
     this.applyForce(arrive);
     this.applyForce(flee);
   }
@@ -147,12 +143,12 @@ class Particle {
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.acc.mult(0);
-    this.vel.mult(0.95); 
+    this.vel.mult(0.93);
   }
 
   show() {
     stroke(0, 200, 180, 230); 
-    strokeWeight(2.5); 
+    strokeWeight(2); 
     point(this.pos.x, this.pos.y);
   }
 
@@ -172,7 +168,7 @@ class Particle {
   flee(target) {
     let desired = p5.Vector.sub(target, this.pos);
     let d = desired.mag();
-    if (d < 80) { 
+    if (d < 60) { 
       desired.setMag(this.maxspeed);
       desired.mult(-1);
       let steer = p5.Vector.sub(desired, this.vel);
