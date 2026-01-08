@@ -10,19 +10,25 @@ let msg = "추워!";
 let fontSize;
 let resolution = 3; 
 
-let marqueeX; 
+let marqueeX = 0; 
 let marqueeSpeed = 1.2; 
-let marqueeText = "데이터를 불러오는 중...          ";
+let marqueeText = "데이터를 불러오는 중입니다...          ";
 
 function preload() {
-  font = loadFont('GothicA1-Black.ttf'); 
+  try {
+    font = loadFont('GothicA1-Black.ttf'); 
+  } catch (e) {
+    console.log("Font failed");
+  }
 }
 
 function fetchSeoulWeather() {
   let url = 'https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current_weather=true';
   loadJSON(url, (data) => {
-    let temp = data.current_weather.temperature;
-    marqueeText = `현재 서울 기온: ${temp}°C | 마우스로 글자를 흩뿌려보세요!          `;
+    if (data && data.current_weather) {
+      let temp = data.current_weather.temperature;
+      marqueeText = `현재 서울 기온: ${temp}°C | 마우스로 글자를 흩뿌려보세요!          `;
+    }
   }, () => {
     marqueeText = "기온 로드 실패 | 마우스로 글자를 흩뿌려보세요!          ";
   });
@@ -32,8 +38,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   pixelDensity(1);
   fetchSeoulWeather();
-  
-  marqueeX = 0; 
   initParticles();
 }
 
@@ -92,16 +96,18 @@ function drawMarquee() {
   
   let tw = textWidth(marqueeText);
   let gap = 100; 
-
-  for (let i = 0; i < 3; i++) {
-    let xPos = marqueeX + i * (tw + gap);
-    text(marqueeText, xPos, 15);
-  }
   
-  marqueeX -= marqueeSpeed;
-  
-  if (marqueeX < -(tw + gap)) {
-    marqueeX = 0; 
+  if (tw > 0) {
+    let step = tw + gap;
+    for (let xPos = marqueeX; xPos < width + step; xPos += step) {
+      text(marqueeText, xPos, 15);
+    }
+    
+    marqueeX -= marqueeSpeed;
+    
+    if (marqueeX <= -step) {
+      marqueeX = 0; 
+    }
   }
   pop();
 }
@@ -173,5 +179,6 @@ class Particle {
     }
   }
 }
+
 
 
