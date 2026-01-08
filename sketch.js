@@ -91,18 +91,15 @@ function drawMarquee() {
   textAlign(LEFT, CENTER);
   
   let tw = textWidth(marqueeText);
-  let gap = 50; // 글자 사이의 간격
+  let gap = 100; 
 
-  // 반복문을 사용해 글자를 3번 그립니다.
   for (let i = 0; i < 3; i++) {
-    // 각 글자는 (너비 + 간격)만큼 떨어져서 그려집니다.
     let xPos = marqueeX + i * (tw + gap);
     text(marqueeText, xPos, 15);
   }
   
   marqueeX -= marqueeSpeed;
   
-  // 첫 번째 글자가 간격까지 포함해서 완전히 왼쪽으로 사라지면 리셋
   if (marqueeX < -(tw + gap)) {
     marqueeX = 0; 
   }
