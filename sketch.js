@@ -3,6 +3,7 @@
  * Copyright (c) 2026 @ouorgb. All rights reserved.
  * ===========================================================
  */
+
 let font;
 let particles = [];
 let msg = "추워!"; 
@@ -32,13 +33,12 @@ function setup() {
   pixelDensity(1);
   fetchSeoulWeather();
   
-  marqueeX = width; 
+  marqueeX = 0; 
   initParticles();
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  marqueeX = width; 
   initParticles();
 }
 
@@ -85,21 +85,26 @@ function drawMarquee() {
   rect(0, 0, width, 30); 
   
   fill(120, 140, 210);
-  
   if (font) textFont(font);
   else textFont('sans-serif');
-  
   textSize(16); 
   textAlign(LEFT, CENTER);
   
   let tw = textWidth(marqueeText);
+  let gap = 50; 
+
   
-  text(marqueeText, marqueeX, 15);
+  for (let i = 0; i < 3; i++) {
+  
+    let xPos = marqueeX + i * (tw + gap);
+    text(marqueeText, xPos, 15);
+  }
   
   marqueeX -= marqueeSpeed;
   
-  if (marqueeX < -tw) {
-    marqueeX = width; 
+  
+  if (marqueeX < -(tw + gap)) {
+    marqueeX = 0; 
   }
   pop();
 }
